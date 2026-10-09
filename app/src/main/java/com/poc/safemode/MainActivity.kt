@@ -4,9 +4,7 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
-import androidx.compose.runtime.Composable
-import androidx.compose.ui.tooling.preview.Preview
-import com.poc.safemode.ui.SafeModeScreen
+import com.poc.safemode.ui.SafeModeApp
 import com.poc.safemode.ui.theme.SafeModeTheme
 
 class MainActivity : ComponentActivity() {
@@ -15,16 +13,8 @@ class MainActivity : ComponentActivity() {
         enableEdgeToEdge()
         setContent {
             SafeModeTheme {
-                SafeModeScreen()
+                SafeModeApp()
             }
         }
-    }
-}
-
-@Preview(showBackground = true)
-@Composable
-fun MainPreview() {
-    SafeModeTheme {
-        SafeModeScreen()
     }
 }

@@ -1,3 +1,83 @@
-<resources>
+<resources xmlns:tools="http://schemas.android.com/tools">
     <string name="app_name">Safe Mode</string>
+
+    <string name="screen_title">Modo Seguro</string>
+
+    <string name="areas_empty">Nenhuma área de confiança cadastrada. Toque em Nova Área de Confiança para criar a primeira.</string>
+    <string name="areas_item_wifi">Wi-Fi: %1$s · %2$s</string>
+    <string name="areas_item_details">Raio de %1$d m · %2$s, %3$s</string>
+    <string name="areas_delete_description">Excluir %1$s</string>
+    <string name="areas_delete_title">Excluir área?</string>
+    <string name="areas_delete_message">A área %1$s será removida. Essa ação não pode ser desfeita.</string>
+    <string name="action_delete">Excluir</string>
+    <string name="action_cancel">Cancelar</string>
+    <string name="action_new_area">Nova Área de Confiança</string>
+    <string name="action_test_status">Testar Status Atual</string>
+
+    <string name="editor_title_new">Nova área</string>
+    <string name="editor_title_edit">Editar área</string>
+    <string name="editor_back">Voltar</string>
+    <string name="name_card_title">Identificação</string>
+    <string name="name_label">Nome</string>
+    <string name="name_placeholder">Casa, Trabalho…</string>
+
+    <string name="wifi_card_title">Rede Wi-Fi</string>
+    <string name="wifi_ssid_label">Rede da área</string>
+    <string name="wifi_ssid_empty_hint">Use a rede conectada ou busque as redes próximas.</string>
+    <string name="wifi_missing_access_point">Ponto de acesso não registrado. Toque em Usar Wi-Fi Conectado estando nesta rede.</string>
+    <plurals name="wifi_access_points">
+        <item quantity="one">%1$d ponto de acesso reconhecido</item>
+        <item quantity="other">%1$d pontos de acesso reconhecidos</item>
+    </plurals>
+    <string name="wifi_network_summary">%1$s · %2$s</string>
+    <string name="wifi_security_open">Aberta, sem senha</string>
+    <string name="wifi_security_wep">Segurança fraca</string>
+    <string name="wifi_security_with_protocol">%1$s (%2$s)</string>
+    <string name="wifi_security_personal">Protegida por senha</string>
+    <string name="wifi_security_enterprise">Corporativa</string>
+    <string name="wifi_security_unknown">Segurança desconhecida</string>
+    <string name="wifi_weak_security_warning">Esta rede é fácil de falsificar: sem senha forte, qualquer pessoa pode criar uma rede idêntica. A área pode ser salva, mas fica menos confiável.</string>
+    <string name="wifi_use_connected">Usar Wi-Fi Conectado</string>
+    <string name="wifi_search">Buscar Outras Redes</string>
+    <string name="wifi_nearby_title">Redes próximas</string>
+
+    <string name="location_card_title">Geolocalização</string>
+    <string name="location_latitude_label">Latitude</string>
+    <string name="location_longitude_label">Longitude</string>
+    <string name="location_latitude_error">Entre -90 e 90</string>
+    <string name="location_longitude_error">Entre -180 e 180</string>
+    <string name="location_capture">Capturar Local Atual</string>
+
+    <string name="radius_title">Raio de Alcance Seguro</string>
+    <string name="radius_value">%1$d m</string>
+    <string name="radius_state_description" tools:ignore="PluralsCandidate">%1$d metros</string>
+
+    <string name="action_grant_location">Permitir Localização</string>
+    <string name="permission_wifi_rationale">O Android só revela o nome das redes Wi-Fi a apps com acesso à localização precisa. Permita para escolher a rede desta área.</string>
+    <string name="permission_location_rationale">Permita o acesso à localização precisa para capturar o local atual. Sem isso, digite as coordenadas.</string>
+
+    <string name="action_save_area">Salvar Área de Confiança</string>
+    <string name="action_open_settings">Abrir configurações</string>
+
+    <string name="msg_save_failed">Não foi possível salvar a área de confiança.</string>
+    <string name="msg_delete_failed">Não foi possível excluir a área de confiança.</string>
+    <string name="msg_wifi_not_connected">Nenhuma rede Wi-Fi conectada.</string>
+    <string name="msg_wifi_no_access_point">Não foi possível identificar o ponto de acesso desta rede. Tente novamente.</string>
+    <string name="msg_wifi_disabled">Ative o Wi-Fi do aparelho para buscar redes.</string>
+    <string name="msg_wifi_none_found">Nenhuma rede encontrada. Aguarde um pouco e tente de novo.</string>
+    <string name="msg_location_disabled">Ative a localização do aparelho para continuar.</string>
+    <string name="msg_location_unavailable">Não foi possível obter a localização. Tente novamente.</string>
+
+    <string name="msg_status_inside">Você está dentro de um local seguro: %1$s.</string>
+    <string name="msg_status_wrong_network">Fora das áreas seguras: nenhuma área usa a rede %1$s.</string>
+    <string name="msg_status_unknown_access_point">Fora das áreas seguras: a rede %1$s não está em um ponto de acesso reconhecido de %2$s. Se for um roteador ou repetidor seu, edite a área e toque em Usar Wi-Fi Conectado.</string>
+    <string name="msg_status_security_mismatch">Fora das áreas seguras: a rede %1$s está como “%2$s”, mas em %3$s foi registrada como “%4$s”.</string>
+    <string name="msg_status_no_wifi">Fora das áreas seguras: sem Wi-Fi conectado.</string>
+    <string name="msg_status_out_of_range">Fora das áreas seguras: você está a %1$d m de %2$s (raio de %3$d m).</string>
+    <string name="msg_status_no_area">Cadastre uma área de confiança antes de testar.</string>
+    <string name="msg_status_low_accuracy">Não foi possível confirmar: a precisão da localização (%1$d m) é pior que o raio (%2$d m).</string>
+
+    <string name="msg_permission_denied">A permissão de localização é necessária para ler a rede Wi-Fi e a posição do aparelho.</string>
+    <string name="msg_permission_approximate">A localização aproximada não basta. Permita a localização precisa.</string>
+    <string name="msg_permission_blocked">Permissão de localização bloqueada. Libere nas configurações do app.</string>
 </resources>
