@@ -19,6 +19,7 @@ data class WifiInfoUiState(
     val bssid: String = UNKNOWN,
     val securityType: String = UNKNOWN,
     val authorizationStatus: String = UNKNOWN,
+    val accuracyAuthorization: String = UNKNOWN,
     val latitude: String = UNKNOWN,
     val longitude: String = UNKNOWN,
     val isLoading: Boolean = false,
@@ -38,7 +39,8 @@ class WifiInfoViewModel(application: Application) : AndroidViewModel(application
         refreshJob = viewModelScope.launch {
             _uiState.update {
                 it.copy(
-                    authorizationStatus = reader.locationAuthorization().label(),
+                    authorizationStatus = reader.authorizationStatus().label(),
+                    accuracyAuthorization = reader.accuracyAuthorization().label(),
                     isLoading = true,
                 )
             }
@@ -81,8 +83,13 @@ private inline fun <T> orNullIfRevoked(block: () -> T?): T? =
 private fun LocationAuthorization.label(): String = when (this) {
     LocationAuthorization.DENIED -> "Denied"
     LocationAuthorization.SERVICES_DISABLED -> "Location Services Disabled"
-    LocationAuthorization.APPROXIMATE -> "Authorized When In Use (Approximate)"
-    LocationAuthorization.PRECISE -> "Authorized When In Use"
+    LocationAuthorization.AUTHORIZED_WHEN_IN_USE -> "Authorized When In Use"
+}
+
+private fun AccuracyAuthorization.label(): String = when (this) {
+    AccuracyAuthorization.FULL -> "Full Accuracy"
+    AccuracyAuthorization.REDUCED -> "Reduced Accuracy"
+    AccuracyAuthorization.UNKNOWN -> "Unknown"
 }
 
 private fun Double.formatCoordinate(): String = String.format(Locale.getDefault(), "%.6f", this)

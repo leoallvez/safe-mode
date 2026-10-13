@@ -31,8 +31,13 @@ data class WifiDetails(
 enum class LocationAuthorization {
     DENIED,
     SERVICES_DISABLED,
-    APPROXIMATE,
-    PRECISE,
+    AUTHORIZED_WHEN_IN_USE,
+}
+
+enum class AccuracyAuthorization {
+    FULL,
+    REDUCED,
+    UNKNOWN,
 }
 
 /** Reads the current Wi-Fi connection and device location straight from the platform APIs. */
@@ -46,12 +51,18 @@ class DeviceInfoReader(context: Context) {
     private val locationManager =
         appContext.getSystemService(Context.LOCATION_SERVICE) as LocationManager
 
-    fun locationAuthorization(): LocationAuthorization = when {
-        !hasPermission(Manifest.permission.ACCESS_COARSE_LOCATION) -> LocationAuthorization.DENIED
+    fun authorizationStatus(): LocationAuthorization = when {
+        !hasPermission(Manifest.permission.ACCESS_COARSE_LOCATION) &&
+            !hasPermission(Manifest.permission.ACCESS_FINE_LOCATION) -> LocationAuthorization.DENIED
         !LocationManagerCompat.isLocationEnabled(locationManager) ->
             LocationAuthorization.SERVICES_DISABLED
-        hasPermission(Manifest.permission.ACCESS_FINE_LOCATION) -> LocationAuthorization.PRECISE
-        else -> LocationAuthorization.APPROXIMATE
+        else -> LocationAuthorization.AUTHORIZED_WHEN_IN_USE
+    }
+
+    fun accuracyAuthorization(): AccuracyAuthorization = when {
+        hasPermission(Manifest.permission.ACCESS_FINE_LOCATION) -> AccuracyAuthorization.FULL
+        hasPermission(Manifest.permission.ACCESS_COARSE_LOCATION) -> AccuracyAuthorization.REDUCED
+        else -> AccuracyAuthorization.UNKNOWN
     }
 
     /**
@@ -73,18 +84,19 @@ class DeviceInfoReader(context: Context) {
 
     @SuppressLint("MissingPermission")
     suspend fun readLocation(): Location? {
-        val authorization = locationAuthorization()
+        val authorization = authorizationStatus()
         if (authorization == LocationAuthorization.DENIED ||
             authorization == LocationAuthorization.SERVICES_DISABLED
         ) {
             return null
         }
 
+        val accuracy = accuracyAuthorization()
         val enabledProviders = locationManager.getProviders(true)
         val providers = buildList {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) add(LocationManager.FUSED_PROVIDER)
             add(LocationManager.NETWORK_PROVIDER)
-            if (authorization == LocationAuthorization.PRECISE) add(LocationManager.GPS_PROVIDER)
+            if (accuracy == AccuracyAuthorization.FULL) add(LocationManager.GPS_PROVIDER)
         }.filter { it in enabledProviders }
 
         val current = providers.firstOrNull()?.let { provider ->

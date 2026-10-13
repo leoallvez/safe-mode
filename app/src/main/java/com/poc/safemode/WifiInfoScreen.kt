@@ -1,7 +1,10 @@
 package com.poc.safemode
 
 import android.Manifest
+import android.content.Intent
 import android.content.pm.PackageManager
+import android.net.Uri
+import android.provider.Settings
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.layout.Arrangement
@@ -23,6 +26,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
@@ -53,13 +57,20 @@ fun WifiInfoRoute(viewModel: WifiInfoViewModel, modifier: Modifier = Modifier) {
         ActivityResultContracts.RequestMultiplePermissions(),
     ) { viewModel.refresh() }
 
-    // The system only reveals SSID/BSSID to apps holding precise location.
     val refreshOrRequestPermission = {
         val hasFineLocation = ContextCompat.checkSelfPermission(
             context,
             Manifest.permission.ACCESS_FINE_LOCATION,
         ) == PackageManager.PERMISSION_GRANTED
         if (hasFineLocation) viewModel.refresh() else permissionLauncher.launch(locationPermissions)
+    }
+
+    val onOpenSettings = {
+        val intent = Intent(
+            Settings.ACTION_APPLICATION_DETAILS_SETTINGS,
+            Uri.fromParts("package", context.packageName, null),
+        )
+        context.startActivity(intent)
     }
 
     var initialLoadDone by rememberSaveable { mutableStateOf(false) }
@@ -73,6 +84,7 @@ fun WifiInfoRoute(viewModel: WifiInfoViewModel, modifier: Modifier = Modifier) {
     WifiInfoScreen(
         uiState = uiState,
         onUpdateClick = refreshOrRequestPermission,
+        onOpenSettingsClick = onOpenSettings,
         modifier = modifier,
     )
 }
@@ -82,6 +94,7 @@ fun WifiInfoRoute(viewModel: WifiInfoViewModel, modifier: Modifier = Modifier) {
 fun WifiInfoScreen(
     uiState: WifiInfoUiState,
     onUpdateClick: () -> Unit,
+    onOpenSettingsClick: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
     Scaffold(
@@ -163,6 +176,21 @@ fun WifiInfoScreen(
                     singleLine = true,
                 )
 
+                OutlinedTextField(
+                    value = uiState.accuracyAuthorization,
+                    onValueChange = {},
+                    readOnly = true,
+                    label = { Text("Accuracy Authorization") },
+                    modifier = Modifier.fillMaxWidth(),
+                    singleLine = true,
+                )
+
+                TextButton(
+                    onClick = onOpenSettingsClick,
+                ) {
+                    Text("Open Settings")
+                }
+
                 Row(
                     modifier = Modifier.fillMaxWidth(),
                     horizontalArrangement = Arrangement.spacedBy(12.dp),
@@ -219,10 +247,12 @@ fun WifiInfoScreenPreview() {
                 bssid = "a4:91:b1:2c:7e:10",
                 securityType = "WPA3 Personal",
                 authorizationStatus = "Authorized When In Use",
+                accuracyAuthorization = "Full Accuracy",
                 latitude = "-23,625445",
                 longitude = "-46,705629",
             ),
             onUpdateClick = {},
+            onOpenSettingsClick = {},
         )
     }
 }
