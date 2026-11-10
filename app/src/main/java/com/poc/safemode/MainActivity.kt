@@ -15,7 +15,7 @@ class MainActivity : ComponentActivity() {
         enableEdgeToEdge()
         setContent {
             SafeModeTheme {
-                WifiInfoRoute(viewModel = viewModel)
+                MainScreen(viewModel = viewModel)
             }
         }
     }
